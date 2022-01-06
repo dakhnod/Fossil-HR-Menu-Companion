@@ -81,9 +81,9 @@ class ActionSettingsActivity : AppCompatActivity() {
     @Throws(IllegalArgumentException::class)
     private fun saveAndExit(settingsFragment: SettingsFragment) {
         val label = settingsFragment.findPreference<EditTextPreference>("label")!!.text
-        if (label.isNullOrEmpty()) {
-            throw IllegalArgumentException("label must not be empty")
-        }
+        // if (label.isNullOrEmpty()) {
+        //    throw IllegalArgumentException("label must not be empty")
+        //}
         val action = settingsFragment.findPreference<ListPreference>("action")!!.value
         val isRoot = intent.getBooleanExtra("EXTRA_ACTION_IS_ROOT", false);
         if (!isRoot && action.isNullOrEmpty()) {
