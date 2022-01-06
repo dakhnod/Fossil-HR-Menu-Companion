@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var menuActionRoot: MenuAction
     private lateinit var sharedPrefs: SharedPreferences
 
-    private val PREFS_KEY_MENU_STRUCTURE = "MENU_STRUCTURE"
+    object PrefConstants {
+        const val PREFS_KEY_MENU_STRUCTURE = "MENU_STRUCTURE"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,14 +75,14 @@ class MainActivity : AppCompatActivity() {
         initViews()
     }
 
-    var editActionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private var editActionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if(it.resultCode == ActionSettingsActivity.RESULT_CODE_OK){
             val resultIntent = it.data ?: return@registerForActivityResult
 
             val editedMenuAction = resultIntent.getSerializableExtra("EXTRA_ACTION") as MenuAction
             val originalHash = resultIntent.getIntExtra("EXTRA_ACTION_ORIGINAL_HASH", 0)
 
-            class FoundMessage : Throwable() {}
+            class FoundMessage : Throwable()
 
             fun searchWithChildren(action: MenuAction){
                 if(action.hashCode() == originalHash){
@@ -109,14 +111,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    var createActionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private var createActionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if(it.resultCode == ActionSettingsActivity.RESULT_CODE_OK){
             val resultIntent = it.data ?: return@registerForActivityResult
 
             val editedMenuAction = resultIntent.getSerializableExtra("EXTRA_ACTION") as MenuAction
             val originalHash = resultIntent.getIntExtra("EXTRA_ACTION_PARENT_HASH", 0)
 
-            class FoundMessage : Throwable() {}
+            class FoundMessage : Throwable()
 
             fun searchWithChildren(action: MenuAction){
                 if(action.hashCode() == originalHash){
@@ -142,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         if(menuAction !is MenuAction){
             return false
         }
-        val options = ArrayList<String>(3);
+        val options = ArrayList<String>(3)
         options.add("add child")
         options.add("edit")
         options.add("delete")
@@ -151,31 +153,35 @@ class MainActivity : AppCompatActivity() {
                 if(dialogInterface !is DialogInterface){
                     return@OnClickListener
                 }
-                if(i == 0){
-                    if(!menuAction.isSubmenu){
-                        Toast.makeText(this, "cannot create children for non sub-menu", Toast.LENGTH_LONG).show()
-                        return@OnClickListener
+                when (i) {
+                    0 -> {
+                        if(!menuAction.isSubmenu){
+                            Toast.makeText(this, "cannot create children for non sub-menu", Toast.LENGTH_LONG).show()
+                            return@OnClickListener
+                        }
+                        val createIntent = Intent(this, ActionSettingsActivity::class.java)
+                        createIntent.putExtra("EXTRA_ACTION_PARENT_HASH", menuAction.hashCode())
+                        createActionLauncher.launch(createIntent)
                     }
-                    val createIntent = Intent(this, ActionSettingsActivity::class.java)
-                    createIntent.putExtra("EXTRA_ACTION_PARENT_HASH", menuAction.hashCode())
-                    createActionLauncher.launch(createIntent)
-                }else if(i == 1){
-                    val editIntent = Intent(this, ActionSettingsActivity::class.java)
-                    editIntent.putExtra("EXTRA_ACTION", menuAction)
-                    editIntent.putExtra("EXTRA_ACTION_ORIGINAL_HASH", menuAction.hashCode())
-                    editIntent.putExtra("EXTRA_ACTION_IS_ROOT", treeNode.level == 1)
-                    editActionLauncher.launch(editIntent)
-                }else if(i == 2){
-                    if(treeNode.level == 1){
-                        Toast.makeText(this, "cannot delete root node.", Toast.LENGTH_LONG).show()
-                        return@OnClickListener
+                    1 -> {
+                        val editIntent = Intent(this, ActionSettingsActivity::class.java)
+                        editIntent.putExtra("EXTRA_ACTION", menuAction)
+                        editIntent.putExtra("EXTRA_ACTION_ORIGINAL_HASH", menuAction.hashCode())
+                        editIntent.putExtra("EXTRA_ACTION_IS_ROOT", treeNode.level == 1)
+                        editActionLauncher.launch(editIntent)
                     }
-                    val parent = treeNode.parent.value
-                    if(parent !is MenuAction){
-                        return@OnClickListener
+                    2 -> {
+                        if(treeNode.level == 1){
+                            Toast.makeText(this, "cannot delete root node.", Toast.LENGTH_LONG).show()
+                            return@OnClickListener
+                        }
+                        val parent = treeNode.parent.value
+                        if(parent !is MenuAction){
+                            return@OnClickListener
+                        }
+                        parent.actionHandlers.remove(menuAction)
+                        refreshTree()
                     }
-                    parent.actionHandlers.remove(menuAction)
-                    refreshTree()
                 }
             })
         dialog.show()
@@ -221,7 +227,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun persistMenu(rootAction: MenuAction){
-        sharedPrefs.edit().putString(PREFS_KEY_MENU_STRUCTURE, actionToJsonString(rootAction)).apply()
+        sharedPrefs.edit().putString(PrefConstants.PREFS_KEY_MENU_STRUCTURE, actionToJsonString(rootAction)).apply()
     }
 
     private fun loadMenuFromStorage(): MenuAction{
@@ -229,7 +235,7 @@ class MainActivity : AppCompatActivity() {
             .registerTypeAdapter(MenuAction::class.java, MenuActionDeserializer())
             .create()
 
-        val structureJson = sharedPrefs.getString(PREFS_KEY_MENU_STRUCTURE, null)
+        val structureJson = sharedPrefs.getString(PrefConstants.PREFS_KEY_MENU_STRUCTURE, null)
         if(structureJson.isNullOrEmpty()){
             val inputStream = assets.open("default_menu_structure.json.txt")
 
@@ -239,24 +245,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         return deserializer.fromJson(structureJson, MenuAction::class.java)
-    }
-
-    private fun buildTestMenu(): MenuAction{
-        val parent = MenuAction(null, "main")
-        parent.isSubmenu = true
-
-        val topShort = MenuAction("top_short_press_release", "Smarthome")
-        topShort.isSubmenu = true
-
-        val middleShort = MenuAction("middle_short_press_release", "Window toggle")
-        topShort.actionHandlers.add(middleShort)
-
-        val bottomShort = MenuAction("bottom_short_press_release", "Cryptos")
-
-        parent.actionHandlers.add(topShort)
-        parent.actionHandlers.add(bottomShort)
-
-        return parent
     }
 
     private fun buildMenuTree(menuAction: MenuAction, treeNode: TreeNode) {
@@ -282,7 +270,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "menu serialization failed", Toast.LENGTH_LONG).show()
             return
         }
-        var result = exportFile.writeText(json)
+        exportFile.writeText(json)
         Toast.makeText(this, "written to %s".format(exportFile), Toast.LENGTH_LONG).show()
     }
 

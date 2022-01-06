@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import com.unnamed.b.atv.model.TreeNode
 import d.d.hrmenucompanion.model.MenuAction
@@ -13,10 +12,10 @@ class MenuActionHolder(context: Context?) : TreeNode.BaseNodeViewHolder<MenuActi
     override fun createNodeView(node: TreeNode?, menuAction: MenuAction?): View {
         val actionView = LayoutInflater.from(context).inflate(R.layout.menu_action, null, false)
         if (menuAction == null) {
-            return actionView;
+            return actionView
         }
         if (node == null) {
-            return actionView;
+            return actionView
         }
         actionView.findViewById<TextView>(R.id.actionTextView).text =
             menuAction.action ?: "entry point"

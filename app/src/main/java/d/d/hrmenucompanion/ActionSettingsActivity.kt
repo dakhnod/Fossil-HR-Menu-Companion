@@ -1,12 +1,10 @@
 package d.d.hrmenucompanion
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NavUtils
 import androidx.preference.*
 import d.d.hrmenucompanion.model.MenuAction
 
@@ -48,7 +46,7 @@ class ActionSettingsActivity : AppCompatActivity() {
             return
         }
         val action = intent.getSerializableExtra("EXTRA_ACTION") as MenuAction
-        val isRoot = intent.getBooleanExtra("EXTRA_ACTION_IS_ROOT", false);
+        val isRoot = intent.getBooleanExtra("EXTRA_ACTION_IS_ROOT", false)
         settingsFragment.findPreference<EditTextPreference>("label")!!.text = action.label
         if (isRoot) {
             settingsFragment.findPreference<ListPreference>("action")!!.isEnabled = false
@@ -85,7 +83,7 @@ class ActionSettingsActivity : AppCompatActivity() {
         //    throw IllegalArgumentException("label must not be empty")
         //}
         val action = settingsFragment.findPreference<ListPreference>("action")!!.value
-        val isRoot = intent.getBooleanExtra("EXTRA_ACTION_IS_ROOT", false);
+        val isRoot = intent.getBooleanExtra("EXTRA_ACTION_IS_ROOT", false)
         if (!isRoot && action.isNullOrEmpty()) {
             throw IllegalArgumentException("an action must be selected")
         }
@@ -124,7 +122,7 @@ class ActionSettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class SettingsFragment(val settingsActivity: ActionSettingsActivity) :
+    class SettingsFragment(private val settingsActivity: ActionSettingsActivity) :
         PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
