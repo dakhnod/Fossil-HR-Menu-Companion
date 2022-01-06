@@ -1,0 +1,45 @@
+{
+  "label": "Main screen",
+  "is_submenu": true,
+  "action_handlers": [
+    {
+      "action": "top_short_press_release",
+      "label": "Smarthome",
+      "is_submenu": true,
+      "action_handlers": [
+        {
+          "action": "top_short_press_release",
+          "label": "Open window",
+          "data_sent_on_action": "window_open",
+          "message_displayed_on_action": "opening window..."
+        },
+        {
+          "action": "top_hold",
+          "label": "Close window",
+          "data_sent_on_action": "window_close",
+          "message_displayed_on_action": "closing window..."
+        },
+        {
+          "action": "middle_short_press_release",
+          "label": "Toggle light",
+          "data_sent_on_action": "Licht umschalten",
+          "message_displayed_on_action": "toggling light..."
+        },
+        {
+          "action": "bottom_short_press_release",
+          "label": "Back",
+          "action_goes_back": true
+        }
+      ]
+    },
+    {
+      "action": "top_hold",
+      "label": "Coffee"
+    },
+    {
+      "action": "bottom_short_press_release",
+      "label": "Quit",
+      "action_closes_app": true
+    }
+  ]
+}

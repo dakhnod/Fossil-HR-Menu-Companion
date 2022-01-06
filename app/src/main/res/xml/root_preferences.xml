@@ -1,0 +1,58 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="Menu action">
+
+        <EditTextPreference
+            app:key="label"
+            app:title="Action label"
+            app:persistent="false"
+            app:useSimpleSummaryProvider="true"/>
+
+        <ListPreference
+            app:key="action"
+            app:title="Action"
+            app:persistent="false"
+            app:useSimpleSummaryProvider="true"
+            app:entries="@array/action_values"
+            app:entryValues="@array/action_values"/>
+
+        <SwitchPreference
+            app:key="is_submenu"
+            app:summary="triggering this action will open a new screen"
+            app:title="Is sub-menu"
+            app:persistent="false" />
+
+        <SwitchPreference
+            app:key="action_goes_back"
+            app:summary="triggering this action will go back one screen"
+            app:title="Action goes back"
+            app:persistent="false" />
+
+        <SwitchPreference
+            app:key="action_closes_app"
+            app:summary="triggering this action will close the menu app"
+            app:title="Action closes menu"
+            app:persistent="false" />
+
+        <SwitchPreference
+            app:key="action_closes_app_on_finish"
+            app:summary="when phone responds with finshed flag to this action, the menu app closes"
+            app:title="Action closes menu on finish"
+            app:persistent="false" />
+
+        <EditTextPreference
+            app:key="data_sent_on_action"
+            app:summary="this data gets send to the phones when the action is triggered"
+            app:title="Data sent on action"
+            app:persistent="false" />
+
+        <EditTextPreference
+            app:key="message_displayed_on_action"
+            app:summary="this message gets displayed in the menu when the action is triggered"
+            app:title="Message displayed on action"
+            app:persistent="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

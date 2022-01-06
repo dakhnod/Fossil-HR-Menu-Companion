@@ -1,0 +1,26 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+
+    <string-array name="action_values">
+        <item>top_short_press_release</item>
+        <item>top_hold</item>
+        <item>top_long_press_release</item>
+        <item>middle_short_press_release</item>
+        <item>middle_hold</item>
+        <item>middle_long_press_release</item>
+        <item>bottom_short_press_release</item>
+        <item>bottom_hold</item>
+        <item>bottom_long_press_release</item>
+        <item>flick_away</item>
+        <item>double_tap</item>
+    </string-array>
+</resources>
