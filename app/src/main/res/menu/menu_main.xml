@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="d.d.hrmenucompanion.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_export"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Export structure json"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_import"
+        android:orderInCategory="100"
+        android:title="Import structure json"
         app:showAsAction="never" />
 </menu>

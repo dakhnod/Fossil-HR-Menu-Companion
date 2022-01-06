@@ -20,6 +20,7 @@ import d.d.hrmenucompanion.databinding.ActivityMainBinding
 import d.d.hrmenucompanion.model.MenuAction
 import d.d.hrmenucompanion.model.MenuActionDeserializer
 import d.d.hrmenucompanion.model.MenuActionSerializer
+import java.io.File
 import java.io.InputStreamReader
 
 class MainActivity : AppCompatActivity() {
@@ -48,9 +49,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "sending to Gadgetbridge...", Snackbar.LENGTH_LONG).show()
-            val gson = GsonBuilder()
-                .registerTypeAdapter(MenuAction::class.java, MenuActionSerializer())
-                .create()
 
             val intent = Intent("nodomain.freeyourgadget.gadgetbridge.Q_PUSH_CONFIG")
 
@@ -62,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-            """.trimIndent().format(gson.toJson(menuActionRoot))
+            """.trimIndent().format(actionToJsonString(menuActionRoot))
 
             intent.putExtra("EXTRA_CONFIG_JSON", fullJson)
             sendBroadcast(intent)
@@ -211,14 +209,19 @@ class MainActivity : AppCompatActivity() {
         treeView.expandAll()
     }
 
-    private fun persistMenu(rootAction: MenuAction){
+    private fun actionToJsonString(rootAction: MenuAction, prettyPrint: Boolean = false): String? {
         val serializer = GsonBuilder()
             .registerTypeAdapter(MenuAction::class.java, MenuActionSerializer())
-            .create()
 
-        val jsonString = serializer.toJson(rootAction)
+        if(prettyPrint){
+            serializer.setPrettyPrinting()
+        }
 
-        sharedPrefs.edit().putString(PREFS_KEY_MENU_STRUCTURE, jsonString).apply()
+        return serializer.create().toJson(rootAction)
+    }
+
+    private fun persistMenu(rootAction: MenuAction){
+        sharedPrefs.edit().putString(PREFS_KEY_MENU_STRUCTURE, actionToJsonString(rootAction)).apply()
     }
 
     private fun loadMenuFromStorage(): MenuAction{
@@ -228,7 +231,7 @@ class MainActivity : AppCompatActivity() {
 
         val structureJson = sharedPrefs.getString(PREFS_KEY_MENU_STRUCTURE, null)
         if(structureJson.isNullOrEmpty()){
-            val inputStream = assets.open("default_menu_structure.json")
+            val inputStream = assets.open("default_menu_structure.json.txt")
 
             val structure = deserializer.fromJson(InputStreamReader(inputStream), MenuAction::class.java)
             inputStream.close()
@@ -271,12 +274,27 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun exportStructure(rootAction: MenuAction){
+        val externalDir = getExternalFilesDir("export")
+        val exportFile = File(externalDir, "%d.json.txt".format(System.currentTimeMillis()))
+        val json = actionToJsonString(rootAction, true)
+        if(json == null){
+            Toast.makeText(this, "menu serialization failed", Toast.LENGTH_LONG).show()
+            return
+        }
+        var result = exportFile.writeText(json)
+        Toast.makeText(this, "written to %s".format(exportFile), Toast.LENGTH_LONG).show()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_export -> {
+                exportStructure(menuActionRoot)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
