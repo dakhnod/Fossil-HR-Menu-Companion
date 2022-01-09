@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity() {
 
         val structureJson = sharedPrefs.getString(PrefConstants.PREFS_KEY_MENU_STRUCTURE, null)
         if(structureJson.isNullOrEmpty()){
-            val inputStream = assets.open("default_menu_structure.json.txt")
+            val inputStream = assets.open("default_menu_structure.json")
 
             val structure = deserializer.fromJson(InputStreamReader(inputStream), MenuAction::class.java)
             inputStream.close()
