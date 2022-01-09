@@ -15,7 +15,7 @@
         <item>top_hold</item>
         <item>top_long_press_release</item>
         <item>middle_short_press_release</item>
-        <item>middle_hold</item>
+        <!-- <item>middle_hold</item> -->
         <item>middle_long_press_release</item>
         <item>bottom_short_press_release</item>
         <item>bottom_hold</item>
