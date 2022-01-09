@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                     action.actionClosesApp = editedMenuAction.actionClosesApp
                     action.actionGoesBack = editedMenuAction.actionGoesBack
                     action.isSubmenu = editedMenuAction.isSubmenu
+                    action.appToOpen = editedMenuAction.appToOpen
                     throw FoundMessage()
                 }
                 action.actionHandlers.forEach { menuAction ->
@@ -236,7 +237,7 @@ class MainActivity : AppCompatActivity() {
             .create()
 
         val structureJson = sharedPrefs.getString(PrefConstants.PREFS_KEY_MENU_STRUCTURE, null)
-        if(structureJson.isNullOrEmpty()){
+        if(structureJson.isNullOrBlank()){
             val inputStream = assets.open("default_menu_structure.json.txt")
 
             val structure = deserializer.fromJson(InputStreamReader(inputStream), MenuAction::class.java)

@@ -17,6 +17,12 @@
             app:entries="@array/action_values"
             app:entryValues="@array/action_values"/>
 
+        <EditTextPreference
+            app:key="app_to_open"
+            app:title="App to open"
+            app:persistent="false"
+            app:useSimpleSummaryProvider="true" />
+
         <SwitchPreference
             app:key="is_submenu"
             app:summary="triggering this action will open a new screen"

@@ -20,7 +20,7 @@ class MenuActionSerializer : JsonSerializer<MenuAction> {
         }
 
         node.addProperty("label", src.label)
-        if(!src.action.isNullOrEmpty()){
+        if(!src.action.isNullOrBlank()){
             node.addProperty("action", src.action)
         }
         if (src.isSubmenu) {
@@ -32,11 +32,14 @@ class MenuActionSerializer : JsonSerializer<MenuAction> {
         if (src.actionClosesApp) {
             node.addProperty("action_closes_app", src.actionClosesApp)
         }
-        if (src.dataSendOnAction != null) {
+        if (!src.dataSendOnAction.isNullOrBlank()) {
             node.addProperty("data_sent_on_action", src.dataSendOnAction)
         }
-        if (src.messageDisplayedOnAction != null) {
+        if (!src.messageDisplayedOnAction.isNullOrBlank()) {
             node.addProperty("message_displayed_on_action", src.messageDisplayedOnAction)
+        }
+        if(!src.appToOpen.isNullOrBlank()){
+            node.addProperty("app_to_open", src.appToOpen)
         }
         if (src.actionHandlers.size > 0) {
             val handlers = JsonArray(src.actionHandlers.size)

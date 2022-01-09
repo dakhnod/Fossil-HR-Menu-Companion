@@ -18,7 +18,7 @@ class MenuActionHolder(context: Context?) : TreeNode.BaseNodeViewHolder<MenuActi
             return actionView
         }
         actionView.findViewById<TextView>(R.id.actionTextView).text =
-            menuAction.action ?: "entry point"
+            menuAction.action ?: "Watch face"
         actionView.findViewById<TextView>(R.id.labelTextView).text = menuAction.label
 
         if (menuAction.actionGoesBack) {
@@ -37,7 +37,7 @@ class MenuActionHolder(context: Context?) : TreeNode.BaseNodeViewHolder<MenuActi
             actionView.findViewById<ImageView>(R.id.image_action_is_submenu).visibility =
                 View.VISIBLE
         }
-        if (!menuAction.dataSendOnAction.isNullOrEmpty()) {
+        if (!menuAction.dataSendOnAction.isNullOrBlank()) {
             actionView.findViewById<ImageView>(R.id.image_action_has_data).visibility =
                 View.VISIBLE
         }

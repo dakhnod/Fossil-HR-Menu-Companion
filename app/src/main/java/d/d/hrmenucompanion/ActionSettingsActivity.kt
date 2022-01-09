@@ -53,14 +53,16 @@ class ActionSettingsActivity : AppCompatActivity() {
         } else {
             settingsFragment.findPreference<ListPreference>("action")!!.value = action.action
         }
-        if(isRoot){
-            settingsFragment.findPreference<SwitchPreference>("action_goes_back")!!.isEnabled = false
-            settingsFragment.findPreference<SwitchPreference>("action_closes_app")!!.isEnabled = false
+        if (isRoot) {
+            settingsFragment.findPreference<SwitchPreference>("action_goes_back")!!.isEnabled =
+                false
+            settingsFragment.findPreference<SwitchPreference>("action_closes_app")!!.isEnabled =
+                false
             settingsFragment.findPreference<SwitchPreference>("action_goes_back")!!.isChecked =
                 false
             settingsFragment.findPreference<SwitchPreference>("action_closes_app")!!.isChecked =
                 false
-        }else{
+        } else {
             settingsFragment.findPreference<SwitchPreference>("action_goes_back")!!.isChecked =
                 action.actionGoesBack
             settingsFragment.findPreference<SwitchPreference>("action_closes_app")!!.isChecked =
@@ -74,23 +76,27 @@ class ActionSettingsActivity : AppCompatActivity() {
             action.dataSendOnAction ?: ""
         settingsFragment.findPreference<EditTextPreference>("message_displayed_on_action")!!.text =
             action.messageDisplayedOnAction ?: ""
+        settingsFragment.findPreference<EditTextPreference>("app_to_open")!!.text =
+            action.appToOpen ?: ""
     }
 
     @Throws(IllegalArgumentException::class)
     private fun saveAndExit(settingsFragment: SettingsFragment) {
         val label = settingsFragment.findPreference<EditTextPreference>("label")!!.text
-        // if (label.isNullOrEmpty()) {
+        // if (label.isNullOrBlank()) {
         //    throw IllegalArgumentException("label must not be empty")
         //}
         val action = settingsFragment.findPreference<ListPreference>("action")!!.value
         val isRoot = intent.getBooleanExtra("EXTRA_ACTION_IS_ROOT", false)
-        if (!isRoot && action.isNullOrEmpty()) {
+        if (!isRoot && action.isNullOrBlank()) {
             throw IllegalArgumentException("an action must be selected")
         }
         val dataToSend =
             settingsFragment.findPreference<EditTextPreference>("data_sent_on_action")!!.text
         val messageToDisplay =
             settingsFragment.findPreference<EditTextPreference>("message_displayed_on_action")!!.text
+        val appToOpen =
+            settingsFragment.findPreference<EditTextPreference>("app_to_open")!!.text
 
         val resultAction = MenuAction(action, label)
         resultAction.isSubmenu =
@@ -101,11 +107,14 @@ class ActionSettingsActivity : AppCompatActivity() {
             settingsFragment.findPreference<SwitchPreference>("action_closes_app")!!.isChecked
         resultAction.closesAppOnFinish =
             settingsFragment.findPreference<SwitchPreference>("action_closes_app_on_finish")!!.isChecked
-        if (!dataToSend.isNullOrEmpty()) {
+        if (!dataToSend.isNullOrBlank()) {
             resultAction.dataSendOnAction = dataToSend
         }
-        if (!messageToDisplay.isNullOrEmpty()) {
+        if (!messageToDisplay.isNullOrBlank()) {
             resultAction.messageDisplayedOnAction = messageToDisplay
+        }
+        if(!appToOpen.isNullOrBlank()){
+            resultAction.appToOpen = appToOpen
         }
 
         intent.putExtra("EXTRA_ACTION", resultAction)
