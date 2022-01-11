@@ -32,6 +32,9 @@ class MenuActionSerializer : JsonSerializer<MenuAction> {
         if (src.actionClosesApp) {
             node.addProperty("action_closes_app", src.actionClosesApp)
         }
+        if(src.actionGoesBack) {
+            node.addProperty("action_goes_back", src.actionGoesBack)
+        }
         if (!src.dataSendOnAction.isNullOrBlank()) {
             node.addProperty("data_sent_on_action", src.dataSendOnAction)
         }
