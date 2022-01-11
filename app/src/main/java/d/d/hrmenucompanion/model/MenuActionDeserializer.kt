@@ -4,7 +4,6 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
-import java.util.*
 
 class MenuActionDeserializer : JsonDeserializer<MenuAction> {
     override fun deserialize(
@@ -25,7 +24,7 @@ class MenuActionDeserializer : JsonDeserializer<MenuAction> {
         menuAction.isSubmenu = json.get("is_submenu")?.asBoolean ?: false
         menuAction.actionGoesBack = json.get("action_goes_back")?.asBoolean ?: false
         menuAction.actionClosesApp = json.get("action_closes_app")?.asBoolean ?: false
-        menuAction.closesAppOnFinish = json.get("action_closes_app_on_finish")?.asBoolean ?: false
+        menuAction.actionClosesAppOnFinish = json.get("action_closes_app_on_finish")?.asBoolean ?: false
         menuAction.dataSendOnAction = json.get("data_sent_on_action")?.asString
         menuAction.messageDisplayedOnAction = json.get("message_displayed_on_action")?.asString
         menuAction.appToOpen = json.get("app_to_open")?.asString

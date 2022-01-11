@@ -71,7 +71,7 @@ class ActionSettingsActivity : AppCompatActivity() {
         settingsFragment.findPreference<SwitchPreference>("is_submenu")!!.isChecked =
             action.isSubmenu
         settingsFragment.findPreference<SwitchPreference>("action_closes_app_on_finish")!!.isChecked =
-            action.closesAppOnFinish
+            action.actionClosesAppOnFinish
         settingsFragment.findPreference<EditTextPreference>("data_sent_on_action")!!.text =
             action.dataSendOnAction ?: ""
         settingsFragment.findPreference<EditTextPreference>("message_displayed_on_action")!!.text =
@@ -105,7 +105,7 @@ class ActionSettingsActivity : AppCompatActivity() {
             settingsFragment.findPreference<SwitchPreference>("action_goes_back")!!.isChecked
         resultAction.actionClosesApp =
             settingsFragment.findPreference<SwitchPreference>("action_closes_app")!!.isChecked
-        resultAction.closesAppOnFinish =
+        resultAction.actionClosesAppOnFinish =
             settingsFragment.findPreference<SwitchPreference>("action_closes_app_on_finish")!!.isChecked
         if (!dataToSend.isNullOrBlank()) {
             resultAction.dataSendOnAction = dataToSend

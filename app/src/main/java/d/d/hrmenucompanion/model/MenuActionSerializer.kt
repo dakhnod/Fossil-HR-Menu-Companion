@@ -2,7 +2,6 @@ package d.d.hrmenucompanion.model
 
 import com.google.gson.*
 import java.lang.reflect.Type
-import java.security.KeyStore
 
 class MenuActionSerializer : JsonSerializer<MenuAction> {
     override fun serialize(
@@ -26,8 +25,8 @@ class MenuActionSerializer : JsonSerializer<MenuAction> {
         if (src.isSubmenu) {
             node.addProperty("is_submenu", src.isSubmenu)
         }
-        if (src.closesAppOnFinish) {
-            node.addProperty("close_app_on_finish", src.closesAppOnFinish)
+        if (src.actionClosesAppOnFinish) {
+            node.addProperty("action_closes_app_on_finish", src.actionClosesAppOnFinish)
         }
         if (src.actionClosesApp) {
             node.addProperty("action_closes_app", src.actionClosesApp)

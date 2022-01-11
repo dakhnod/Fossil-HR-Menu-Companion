@@ -29,7 +29,7 @@ class MenuActionHolder(context: Context?) : TreeNode.BaseNodeViewHolder<MenuActi
             actionView.findViewById<ImageView>(R.id.image_action_closes).visibility =
                 View.VISIBLE
         }
-        if (menuAction.closesAppOnFinish) {
+        if (menuAction.actionClosesAppOnFinish) {
             actionView.findViewById<ImageView>(R.id.image_action_closes).visibility =
                 View.VISIBLE
         }

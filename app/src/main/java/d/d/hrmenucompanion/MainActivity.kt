@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                     action.action = editedMenuAction.action
                     action.messageDisplayedOnAction = editedMenuAction.messageDisplayedOnAction
                     action.dataSendOnAction = editedMenuAction.dataSendOnAction
-                    action.closesAppOnFinish = editedMenuAction.closesAppOnFinish
+                    action.actionClosesAppOnFinish = editedMenuAction.actionClosesAppOnFinish
                     action.actionClosesApp = editedMenuAction.actionClosesApp
                     action.actionGoesBack = editedMenuAction.actionGoesBack
                     action.isSubmenu = editedMenuAction.isSubmenu
