@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 {
                     "push": {
                         "set": {
-                            "advancedMenu._.config.menu_structure": %s
+                            "customWatchFace._.config.menu_structure": %s
                         }
                     }
                 }
