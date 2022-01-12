@@ -19,7 +19,7 @@ class MenuActionDeserializer : JsonDeserializer<MenuAction> {
             return menuAction
         }
         val json = jsonElement.asJsonObject
-        menuAction.label = json.get("label").asString
+        menuAction.label = json.get("label")?.asString
         menuAction.action = json.get("action")?.asString
         menuAction.isSubmenu = json.get("is_submenu")?.asBoolean ?: false
         menuAction.actionGoesBack = json.get("action_goes_back")?.asBoolean ?: false
