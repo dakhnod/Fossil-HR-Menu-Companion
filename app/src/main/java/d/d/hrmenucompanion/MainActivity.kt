@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() {
                             return@OnClickListener
                         }
                         parent.actionHandlers.remove(menuAction)
+                        persistMenu(menuActionRoot)
                         refreshTree()
                     }
                 }
