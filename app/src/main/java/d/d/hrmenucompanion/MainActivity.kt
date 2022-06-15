@@ -51,10 +51,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "sending to Gadgetbridge...", Snackbar.LENGTH_LONG).show()
+            sendConfigToGB();
+        }
 
-            val intent = Intent("nodomain.freeyourgadget.gadgetbridge.Q_PUSH_CONFIG")
+        sharedPrefs = getPreferences(MODE_PRIVATE)
+        menuActionRoot = loadMenuFromStorage()
 
-            val fullJson = """
+        val bundle: Bundle? = intent.extras
+        var boolean = bundle?.get("SEND_CONFIG") as? Boolean
+        if(boolean == true) {
+            sendConfigToGB()
+            finishAffinity()
+        } else {
+            initViews()
+        }
+    }
+    
+    private fun sendConfigToGB() {
+        val intent = Intent("nodomain.freeyourgadget.gadgetbridge.Q_PUSH_CONFIG")
+
+        val fullJson = """
                 {
                     "push": {
                         "set": {
@@ -64,15 +80,8 @@ class MainActivity : AppCompatActivity() {
                 }
             """.trimIndent().format(actionToJsonString(menuActionRoot))
 
-            intent.putExtra("EXTRA_CONFIG_JSON", fullJson)
-            sendBroadcast(intent)
-        }
-
-
-        sharedPrefs = getPreferences(MODE_PRIVATE)
-        menuActionRoot = loadMenuFromStorage()
-
-        initViews()
+        intent.putExtra("EXTRA_CONFIG_JSON", fullJson)
+        sendBroadcast(intent)
     }
 
     private var editActionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
