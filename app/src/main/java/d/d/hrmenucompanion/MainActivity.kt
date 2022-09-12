@@ -51,14 +51,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "sending to Gadgetbridge...", Snackbar.LENGTH_LONG).show()
-            sendConfigToGB();
+            sendConfigToGB()
         }
 
         sharedPrefs = getPreferences(MODE_PRIVATE)
         menuActionRoot = loadMenuFromStorage()
 
         val bundle: Bundle? = intent.extras
-        var boolean = bundle?.get("SEND_CONFIG") as? Boolean
+        val boolean = bundle?.get("SEND_CONFIG") as? Boolean
         if(boolean == true) {
             sendConfigToGB()
             finishAffinity()
@@ -147,6 +147,30 @@ class MainActivity : AppCompatActivity() {
             }
             refreshTree()
             persistMenu(menuActionRoot)
+        }
+    }
+
+    private var choseImportFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode != RESULT_OK){
+            return@registerForActivityResult
+        }
+
+        val stream = it.data?.data?.let { it1 -> contentResolver.openInputStream(it1) }
+
+        stream?.let {
+            val fileData = ByteArray(stream.available())
+            stream.read(fileData)
+            stream.close()
+
+            val deserializer = GsonBuilder()
+                .registerTypeAdapter(MenuAction::class.java, MenuActionDeserializer())
+                .create()
+
+            val fileString = String(fileData)
+            
+            menuActionRoot = deserializer.fromJson(fileString, MenuAction::class.java)
+            sharedPrefs.edit().putString(PrefConstants.PREFS_KEY_MENU_STRUCTURE, fileString).apply()
+            refreshTree()
         }
     }
 
@@ -285,6 +309,15 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "written to %s".format(exportFile), Toast.LENGTH_LONG).show()
     }
 
+
+    private fun importStructure(){
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+        }
+        choseImportFileLauncher.launch(intent)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -292,6 +325,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_export -> {
                 exportStructure(menuActionRoot)
+                true
+            }
+            R.id.action_import -> {
+                importStructure()
                 true
             }
             else -> super.onOptionsItemSelected(item)
