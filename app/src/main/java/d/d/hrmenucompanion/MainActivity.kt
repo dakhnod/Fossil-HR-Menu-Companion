@@ -68,19 +68,8 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun sendConfigToGB() {
-        val intent = Intent("nodomain.freeyourgadget.gadgetbridge.Q_PUSH_CONFIG")
-
-        val fullJson = """
-                {
-                    "push": {
-                        "set": {
-                            "customWatchFace._.config.menu_structure": %s
-                        }
-                    }
-                }
-            """.trimIndent().format(actionToJsonString(menuActionRoot))
-
-        intent.putExtra("EXTRA_CONFIG_JSON", fullJson)
+        val intent = Intent("nodomain.freeyourgadget.gadgetbridge.Q_SET_MENU_STRUCTURE")
+        intent.putExtra("EXTRA_MENU_STRUCTURE_JSON", actionToJsonString(menuActionRoot))
         sendBroadcast(intent)
     }
 
